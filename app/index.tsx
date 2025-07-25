@@ -6,7 +6,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Button title="🚚 Executive Tracker" onPress={() => router.push('/executive?eid=EXEC1')} />
+      <Button title="🚚 Executive Tracker" onPress={() => router.push('/executive?eid=6878eece74b794d32c796bcb')} />
       <Button title="🗺 Admin Map View" onPress={() => router.push('/admin')} />
     </View>
   );

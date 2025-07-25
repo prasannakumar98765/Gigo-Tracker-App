@@ -9,7 +9,7 @@ interface Executive {
   status: string;
   currentLocation?: {
     lat: number;
-    lng: number;  // changed from lan
+    lan: number;  // changed from lan
   };
 }
 
@@ -17,7 +17,7 @@ export default function Admin() {
   const [executives, setExecutives] = useState<Record<string, Executive>>({});
 
   useEffect(() => {
-    fetch('http://10.0.2.2:8000/api/delivery/executives')
+    fetch('https://gigo-tracker.onrender.com/api/delivery/executives')
       .then((res) => {
         if (!res.ok) throw new Error('Network response was not ok');
         return res.json();
@@ -36,13 +36,13 @@ export default function Admin() {
     const handleUpdate = (data: {
       executiveId: string;
       lat: number;
-      lng: number;  // changed from lan
+      lan: number;  // changed from lan
     }) => {
       setExecutives((prev) => ({
         ...prev,
         [data.executiveId]: {
           ...prev[data.executiveId],
-          currentLocation: { lat: data.lat, lng: data.lng },
+          currentLocation: { lat: data.lat, lan: data.lan },
         },
       }));
     };
@@ -70,7 +70,7 @@ export default function Admin() {
             key={exec._id}
             coordinate={{
               latitude: exec.currentLocation.lat,
-              longitude: exec.currentLocation.lng,  // changed from lan
+              longitude: exec.currentLocation.lan,  // changed from lan
             }}
             title={exec.name}
             description={`Status: ${exec.status}`}

@@ -1,6 +1,8 @@
-// socket.ts
+// socket.ts (Frontend)
 import { io } from 'socket.io-client';
 
-const socket = io('http://10.0.2.2:8000'); // replace with real IP if testing on mobile
+const socket = io('https://gigo-tracker.onrender.com', {
+  transports: ['websocket'], // ✅ Important for Expo compatibility
+});
 
 export default socket;
