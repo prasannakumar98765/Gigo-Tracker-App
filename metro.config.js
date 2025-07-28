@@ -1,22 +1,9 @@
 // metro.config.js
-const { getDefaultConfig } = require('metro-config');
+const { getDefaultConfig } = require("expo/metro-config");
 
-module.exports = (async () => {
-  const {
-    resolver: { sourceExts, assetExts },
-  } = await getDefaultConfig();
-  return {
-    transformer: {
-      getTransformOptions: async () => ({
-        transform: {
-          experimentalImportSupport: false,
-          inlineRequires: true,
-        },
-      }),
-    },
-    resolver: {
-      assetExts,
-      sourceExts: [...sourceExts, 'ts', 'tsx'],
-    },
-  };
-})();
+const config = getDefaultConfig(__dirname);
+
+// Fixes static asset resolution issues (e.g., logotype.png in expo-router)
+config.resolver.assetExts.push("png");
+
+module.exports = config;

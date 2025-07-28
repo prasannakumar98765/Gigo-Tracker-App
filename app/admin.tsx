@@ -1,3 +1,4 @@
+// app/admin.tsx
 import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
@@ -9,7 +10,7 @@ interface Executive {
   status: string;
   currentLocation?: {
     lat: number;
-    lan: number;  // changed from lan
+    lan: number;
   };
 }
 
@@ -18,10 +19,7 @@ export default function Admin() {
 
   useEffect(() => {
     fetch('https://gigo-tracker.onrender.com/api/delivery/executives')
-      .then((res) => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data: Executive[]) => {
         const execMap: Record<string, Executive> = {};
         data.forEach((exec) => {
@@ -36,7 +34,7 @@ export default function Admin() {
     const handleUpdate = (data: {
       executiveId: string;
       lat: number;
-      lan: number;  // changed from lan
+      lan: number;
     }) => {
       setExecutives((prev) => ({
         ...prev,
@@ -48,7 +46,6 @@ export default function Admin() {
     };
 
     socket.on('executiveLocationUpdated', handleUpdate);
-
     return () => {
       socket.off('executiveLocationUpdated', handleUpdate);
     };
@@ -70,7 +67,7 @@ export default function Admin() {
             key={exec._id}
             coordinate={{
               latitude: exec.currentLocation.lat,
-              longitude: exec.currentLocation.lan,  // changed from lan
+              longitude: exec.currentLocation.lan,
             }}
             title={exec.name}
             description={`Status: ${exec.status}`}

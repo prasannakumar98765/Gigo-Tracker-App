@@ -1,16 +1,16 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
-import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import socket from '../socket';
 
 export default function Executive() {
-  const { eid } = useLocalSearchParams();
   const [status, setStatus] = useState('⏳ Requesting permission...');
 
   useEffect(() => {
     const startTracking = async () => {
-      if (!eid) {
+      const mongoId = await AsyncStorage.getItem('executiveMongoId');
+      if (!mongoId) {
         setStatus('❌ No executive ID');
         return;
       }
@@ -32,7 +32,7 @@ export default function Executive() {
         (loc) => {
           const { latitude, longitude } = loc.coords;
           socket.emit('locationUpdate', {
-            executiveId: eid,
+            executiveId: mongoId, // use MongoDB _id for socket event
             lat: latitude,
             lan: longitude,
           });
@@ -42,7 +42,7 @@ export default function Executive() {
     };
 
     startTracking();
-  }, [eid]);
+  }, []);
 
   return (
     <View style={styles.container}>

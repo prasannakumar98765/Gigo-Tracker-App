@@ -1,13 +1,67 @@
+// app/index.tsx
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { Button, StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 export default function Home() {
   const router = useRouter();
+  const [role, setRole] = useState<string | null>(null);
+  const [executiveId, setExecutiveId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const storedRole = await AsyncStorage.getItem('role');
+        const storedId = await AsyncStorage.getItem('executiveId');
+
+        if (!storedRole || !storedId) {
+          router.replace('/login');
+          return;
+        }
+
+        setRole(storedRole);
+        setExecutiveId(storedId);
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading user role...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <Button title="🚚 Executive Tracker" onPress={() => router.push('/executive?eid=6878eece74b794d32c796bcb')} />
-      <Button title="🗺 Admin Map View" onPress={() => router.push('/admin')} />
+      {role === 'delivery_executive' && executiveId && (
+        <Button
+          title="🚚 Executive Tracker"
+          onPress={() => router.push(`/executive?eid=${executiveId}`)}
+        />
+      )}
+
+      {role === 'admin' && (
+        <Button title="🗺 Admin Map View" onPress={() => router.push('/admin')} />
+      )}
+
+      <Button
+        title="🚪 Logout"
+        color="red"
+        onPress={async () => {
+          await AsyncStorage.clear();
+          router.replace('/login');
+        }}
+      />
     </View>
   );
 }
