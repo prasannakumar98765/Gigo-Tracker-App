@@ -60,7 +60,7 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 20, gap: 20 },
+  container: { flex: 1, justifyContent: 'flex-start', padding: 20, gap: 20 },
   title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center' },
   input: {
     borderWidth: 1,
